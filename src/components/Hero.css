@@ -1,0 +1,388 @@
+/* Hero.css */
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.hero--visible { opacity: 1; }
+
+/* Deep forest-green ambient background */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 70% 40%, #1a3528 0%, transparent 65%),
+    radial-gradient(ellipse 50% 60% at 20% 80%, #142a1e 0%, transparent 60%),
+    linear-gradient(160deg, #0a1a0e 0%, #0d2016 50%, #060f08 100%);
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.hero__content {
+  position: relative;
+  z-index: 1;
+  width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding: 100px 0 80px;
+}
+
+/* ── Left text ── */
+.hero__eyebrow {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-300);
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+
+.hero__name {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.4rem);
+  color: #fff;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+.hero__name em { font-style: italic; color: var(--green-300); }
+
+.hero__tagline {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--green-300);
+  background: rgba(34,145,90,0.12);
+  border: 1px solid rgba(34,145,90,0.25);
+  padding: 5px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.03em;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 12px 28px;
+  border-radius: 100px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+}
+.btn--primary {
+  background: var(--green-400);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(63,179,112,0.3);
+}
+.btn--primary:hover {
+  background: var(--green-500);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(63,179,112,0.4);
+}
+.btn--ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(255,255,255,0.18);
+}
+.btn--ghost:hover {
+  border-color: var(--green-400);
+  color: var(--green-300);
+  transform: translateY(-2px);
+}
+
+.hero__socials {
+  display: flex;
+  gap: 14px;
+}
+.hero__socials a {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.25s, border-color 0.25s, transform 0.25s;
+}
+.hero__socials a:hover {
+  color: var(--green-300);
+  border-color: var(--green-400);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════
+   RIGHT COLUMN — lens circle
+   Matches the intro overlay lens exactly:
+   a circular photo with bezel rings and subtle inner rings.
+   No pulse animation — clean and static.
+═══════════════════════════════════════════ */
+.hero__right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero__lens {
+  position: relative;
+  width: 340px;
+  height: 340px;
+}
+
+/* Outer bezel ring — mimics the camera lens bezel in the intro */
+.hero__lens-bezel {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero__lens-bezel--outer {
+  width: 368px; height: 368px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(111,202,150,0.18) 0%,
+    rgba(255,255,255,0.06) 25%,
+    rgba(111,202,150,0.12) 50%,
+    rgba(255,255,255,0.04) 75%,
+    rgba(111,202,150,0.18) 100%
+  );
+  box-shadow:
+    inset 0 0 0 2px rgba(111,202,150,0.1),
+    0 0 40px rgba(34,145,90,0.12);
+}
+.hero__lens-bezel--inner {
+  width: 348px; height: 348px;
+  border: 2px solid rgba(111,202,150,0.08);
+  background: rgba(0,0,0,0.3);
+}
+
+/* The actual photo circle */
+.hero__lens-photo {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(145deg, #142018, #0e1a12);
+  box-shadow:
+    0 0 0 1px rgba(111,202,150,0.15),
+    0 24px 80px rgba(0,0,0,0.6),
+    inset 0 0 60px rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+/* Real photo — swap in when you have your image */
+.hero__lens-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Placeholder shown until real photo is added */
+.hero__lens-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  color: var(--green-300);
+  letter-spacing: 0.08em;
+  background: linear-gradient(145deg, #1a3020, #0e1a0e);
+}
+
+/* Inner optical reflection rings — subtle, inside the photo circle */
+.hero__lens-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(111,202,150,0.1);
+}
+.hero__lens-ring--1 { width: 240px; height: 240px; }
+.hero__lens-ring--2 { width: 160px; height: 160px; border-color: rgba(111,202,150,0.06); }
+
+/* Stat chips */
+.hero__stat {
+  position: absolute;
+  background: rgba(10, 26, 14, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(111,202,150,0.2);
+  border-radius: 12px;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.hero__stat--tl { top: 16px;    left:  -24px; }
+.hero__stat--br { bottom: 16px; right: -24px; }
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--green-300);
+  line-height: 1;
+}
+.stat-lbl {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+
+/* ── Scroll cue ── */
+.hero__scroll-cue {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  background: none; border: none;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.25s;
+  animation: scrollBounce 2.2s ease-in-out infinite;
+}
+.hero__scroll-cue:hover { opacity: 0.9; }
+.scroll-line {
+  display: block;
+  width: 1.5px; height: 32px;
+  background: linear-gradient(to bottom, transparent, var(--green-300));
+}
+.scroll-dot {
+  display: block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green-300);
+}
+@keyframes scrollBounce {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%     { transform: translateX(-50%) translateY(7px); }
+}
+
+/* ═══════════════════════════════════════════
+   BIRD ANIMATIONS
+═══════════════════════════════════════════ */
+.birds {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.bird {
+  position: absolute;
+  left: -120px;
+  will-change: transform;
+}
+.bird-svg {
+  width: 64px; height: 24px;
+  display: block;
+}
+
+.bird--1 {
+  top: 22%;
+  animation:
+    birdFly 14s linear          3.8s infinite,
+    birdBob 2.4s ease-in-out    3.8s infinite;
+}
+.bird--2 {
+  top: 38%;
+  animation:
+    birdFly 11s linear          7.5s infinite,
+    birdBob 2s   ease-in-out    7.5s infinite;
+}
+.bird--2 .bird-svg { width: 48px; height: 18px; opacity: 0.75; }
+
+@keyframes birdFly {
+  0%   { left: -120px; }
+  100% { left: calc(100vw + 60px); }
+}
+@keyframes birdBob {
+  0%, 100% { margin-top: 0;     }
+  25%       { margin-top: -14px; }
+  75%       { margin-top: 10px;  }
+}
+
+.bird-wing {
+  transform-box: fill-box;
+}
+.bird-wing--left {
+  transform-origin: right center;
+  animation: wingFlapLeft 0.55s ease-in-out infinite alternate;
+}
+.bird-wing--right {
+  transform-origin: left center;
+  animation: wingFlapRight 0.55s ease-in-out 0.08s infinite alternate;
+}
+@keyframes wingFlapLeft {
+  from { transform: rotateX(0deg)  skewY(-8deg);  }
+  to   { transform: rotateX(40deg) skewY(12deg);  }
+}
+@keyframes wingFlapRight {
+  from { transform: rotateX(0deg)  skewY(8deg);   }
+  to   { transform: rotateX(40deg) skewY(-12deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hero__content {
+    grid-template-columns: 1fr;
+    gap: 50px;
+    text-align: center;
+    padding: 100px 0 80px;
+  }
+  .hero__right { order: -1; }
+  .hero__lens, .hero__lens-photo { width: 240px; height: 240px; }
+  .hero__lens-bezel--outer { width: 262px; height: 262px; }
+  .hero__lens-bezel--inner { width: 250px; height: 250px; }
+  .hero__lens-ring--1 { width: 180px; height: 180px; }
+  .hero__lens-ring--2 { width: 120px; height: 120px; }
+  .hero__stat--tl { top: -8px;   left: 0; }
+  .hero__stat--br { bottom: -8px; right: 0; }
+  .hero__badges, .hero__actions, .hero__socials { justify-content: center; }
+  .hero__tagline { margin: 0 auto 28px; }
+}
