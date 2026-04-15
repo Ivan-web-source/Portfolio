@@ -7,12 +7,36 @@
   align-items: center;
   overflow: hidden;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.6s ease;
 }
 .hero--visible { opacity: 1; }
 
-/* Deep forest-green ambient background */
-.hero__bg {
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BACKGROUND LAYER
+   
+   hero__bg-img     — your actual photo (uncomment in Hero.js)
+   hero__bg-placeholder — shown when no photo is set (deep green)
+   hero__bg-overlay — gradient that dims photo so text stays readable
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* Real background photo */
+.hero__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Smooth entry — no jarring pop */
+  animation: heroBgFadeIn 1.2s ease forwards;
+  z-index: 0;
+}
+@keyframes heroBgFadeIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Placeholder gradient — visible when no photo is provided */
+.hero__bg-placeholder {
   position: absolute;
   inset: 0;
   background:
@@ -22,10 +46,26 @@
   z-index: 0;
 }
 
+/* Dark gradient overlay — always present, ensures legibility.
+   Heavier on the left (text side) and lighter on the right (photo side).
+   If your bg photo is very dark, you can reduce the opacity values. */
+.hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      105deg,
+      rgba(6, 15, 8, 0.82) 0%,
+      rgba(6, 15, 8, 0.55) 50%,
+      rgba(6, 15, 8, 0.25) 100%
+    );
+  z-index: 1;
+}
+
 /* ── Layout ── */
 .hero__content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   width: var(--container);
   margin: 0 auto;
   display: grid;
@@ -44,9 +84,7 @@
   text-transform: uppercase;
   color: var(--green-300);
   margin-bottom: 14px;
-  opacity: 0.9;
 }
-
 .hero__name {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 5vw, 4.4rem);
@@ -59,7 +97,7 @@
 
 .hero__tagline {
   font-size: 1rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.6);
   line-height: 1.75;
   max-width: 480px;
   margin-bottom: 28px;
@@ -76,8 +114,8 @@
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--green-300);
-  background: rgba(34,145,90,0.12);
-  border: 1px solid rgba(34,145,90,0.25);
+  background: rgba(34,145,90,0.15);
+  border: 1px solid rgba(34,145,90,0.28);
   padding: 5px 14px;
   border-radius: 100px;
   letter-spacing: 0.03em;
@@ -107,19 +145,20 @@
 .btn--primary {
   background: var(--green-400);
   color: #fff;
-  box-shadow: 0 4px 20px rgba(63,179,112,0.3);
+  box-shadow: 0 4px 20px rgba(63,179,112,0.35);
 }
 .btn--primary:hover {
   background: var(--green-500);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(63,179,112,0.4);
+  box-shadow: 0 8px 28px rgba(63,179,112,0.45);
 }
 .btn--ghost {
-  background: transparent;
-  color: rgba(255,255,255,0.75);
-  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8);
+  border: 1.5px solid rgba(255,255,255,0.2);
 }
 .btn--ghost:hover {
+  background: rgba(255,255,255,0.14);
   border-color: var(--green-400);
   color: var(--green-300);
   transform: translateY(-2px);
@@ -132,8 +171,8 @@
 .hero__socials a {
   width: 38px; height: 38px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.4);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.45);
   display: flex; align-items: center; justify-content: center;
   transition: color 0.25s, border-color 0.25s, transform 0.25s;
 }
@@ -143,12 +182,7 @@
   transform: translateY(-2px);
 }
 
-/* ═══════════════════════════════════════════
-   RIGHT COLUMN — lens circle
-   Matches the intro overlay lens exactly:
-   a circular photo with bezel rings and subtle inner rings.
-   No pulse animation — clean and static.
-═══════════════════════════════════════════ */
+/* ── Right: lens circle ── */
 .hero__right {
   display: flex;
   align-items: center;
@@ -162,7 +196,6 @@
   height: 340px;
 }
 
-/* Outer bezel ring — mimics the camera lens bezel in the intro */
 .hero__lens-bezel {
   position: absolute;
   top: 50%; left: 50%;
@@ -180,9 +213,7 @@
     rgba(255,255,255,0.04) 75%,
     rgba(111,202,150,0.18) 100%
   );
-  box-shadow:
-    inset 0 0 0 2px rgba(111,202,150,0.1),
-    0 0 40px rgba(34,145,90,0.12);
+  box-shadow: inset 0 0 0 2px rgba(111,202,150,0.1), 0 0 40px rgba(34,145,90,0.12);
 }
 .hero__lens-bezel--inner {
   width: 348px; height: 348px;
@@ -190,7 +221,6 @@
   background: rgba(0,0,0,0.3);
 }
 
-/* The actual photo circle */
 .hero__lens-photo {
   position: absolute;
   top: 50%; left: 50%;
@@ -205,17 +235,12 @@
     inset 0 0 60px rgba(0,0,0,0.4);
   z-index: 1;
 }
-
-/* Real photo — swap in when you have your image */
 .hero__lens-img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
   object-position: center top;
   display: block;
 }
-
-/* Placeholder shown until real photo is added */
 .hero__lens-placeholder {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
@@ -226,7 +251,6 @@
   background: linear-gradient(145deg, #1a3020, #0e1a0e);
 }
 
-/* Inner optical reflection rings — subtle, inside the photo circle */
 .hero__lens-ring {
   position: absolute;
   top: 50%; left: 50%;
@@ -238,10 +262,9 @@
 .hero__lens-ring--1 { width: 240px; height: 240px; }
 .hero__lens-ring--2 { width: 160px; height: 160px; border-color: rgba(111,202,150,0.06); }
 
-/* Stat chips */
 .hero__stat {
   position: absolute;
-  background: rgba(10, 26, 14, 0.88);
+  background: rgba(6, 15, 8, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(111,202,150,0.2);
@@ -251,7 +274,7 @@
   flex-direction: column;
   gap: 2px;
   z-index: 2;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
 }
 .hero__stat--tl { top: 16px;    left:  -24px; }
 .hero__stat--br { bottom: 16px; right: -24px; }
@@ -271,16 +294,11 @@
 /* ── Scroll cue ── */
 .hero__scroll-cue {
   position: absolute;
-  bottom: 32px;
-  left: 50%;
+  bottom: 32px; left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
   z-index: 10;
-  background: none; border: none;
-  cursor: pointer;
+  background: none; border: none; cursor: pointer;
   opacity: 0.4;
   transition: opacity 0.25s;
   animation: scrollBounce 2.2s ease-in-out infinite;
@@ -302,9 +320,7 @@
   50%     { transform: translateX(-50%) translateY(7px); }
 }
 
-/* ═══════════════════════════════════════════
-   BIRD ANIMATIONS
-═══════════════════════════════════════════ */
+/* ── Birds ── */
 .birds {
   position: absolute;
   inset: 0;
@@ -312,44 +328,32 @@
   z-index: 2;
   overflow: hidden;
 }
-
 .bird {
   position: absolute;
   left: -120px;
   will-change: transform;
 }
-.bird-svg {
-  width: 64px; height: 24px;
-  display: block;
-}
-
+.bird-svg { width: 64px; height: 24px; display: block; }
 .bird--1 {
   top: 22%;
-  animation:
-    birdFly 14s linear          3.8s infinite,
-    birdBob 2.4s ease-in-out    3.8s infinite;
+  animation: birdFly 14s linear 1.2s infinite, birdBob 2.4s ease-in-out 1.2s infinite;
 }
 .bird--2 {
   top: 38%;
-  animation:
-    birdFly 11s linear          7.5s infinite,
-    birdBob 2s   ease-in-out    7.5s infinite;
+  animation: birdFly 11s linear 4.5s infinite, birdBob 2s ease-in-out 4.5s infinite;
 }
-.bird--2 .bird-svg { width: 48px; height: 18px; opacity: 0.75; }
+.bird--2 .bird-svg { width: 48px; height: 18px; opacity: 0.7; }
 
 @keyframes birdFly {
   0%   { left: -120px; }
   100% { left: calc(100vw + 60px); }
 }
 @keyframes birdBob {
-  0%, 100% { margin-top: 0;     }
-  25%       { margin-top: -14px; }
-  75%       { margin-top: 10px;  }
+  0%,100% { margin-top: 0; }
+  25%     { margin-top: -14px; }
+  75%     { margin-top: 10px; }
 }
-
-.bird-wing {
-  transform-box: fill-box;
-}
+.bird-wing { transform-box: fill-box; }
 .bird-wing--left {
   transform-origin: right center;
   animation: wingFlapLeft 0.55s ease-in-out infinite alternate;
@@ -358,31 +362,29 @@
   transform-origin: left center;
   animation: wingFlapRight 0.55s ease-in-out 0.08s infinite alternate;
 }
-@keyframes wingFlapLeft {
-  from { transform: rotateX(0deg)  skewY(-8deg);  }
-  to   { transform: rotateX(40deg) skewY(12deg);  }
-}
-@keyframes wingFlapRight {
-  from { transform: rotateX(0deg)  skewY(8deg);   }
-  to   { transform: rotateX(40deg) skewY(-12deg); }
-}
+@keyframes wingFlapLeft  { from { transform: rotateX(0)   skewY(-8deg);  } to { transform: rotateX(40deg) skewY(12deg);  } }
+@keyframes wingFlapRight { from { transform: rotateX(0)   skewY(8deg);   } to { transform: rotateX(40deg) skewY(-12deg); } }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero__content {
     grid-template-columns: 1fr;
-    gap: 50px;
+    gap: 48px;
     text-align: center;
     padding: 100px 0 80px;
   }
   .hero__right { order: -1; }
-  .hero__lens, .hero__lens-photo { width: 240px; height: 240px; }
-  .hero__lens-bezel--outer { width: 262px; height: 262px; }
-  .hero__lens-bezel--inner { width: 250px; height: 250px; }
-  .hero__lens-ring--1 { width: 180px; height: 180px; }
-  .hero__lens-ring--2 { width: 120px; height: 120px; }
-  .hero__stat--tl { top: -8px;   left: 0; }
+  .hero__lens { width: 240px; height: 240px; }
+  .hero__lens-photo { width: 220px; height: 220px; }
+  .hero__lens-bezel--outer { width: 260px; height: 260px; }
+  .hero__lens-bezel--inner { width: 248px; height: 248px; }
+  .hero__lens-ring--1 { width: 170px; height: 170px; }
+  .hero__lens-ring--2 { width: 110px; height: 110px; }
+  .hero__stat--tl { top: -8px; left: 0; }
   .hero__stat--br { bottom: -8px; right: 0; }
   .hero__badges, .hero__actions, .hero__socials { justify-content: center; }
   .hero__tagline { margin: 0 auto 28px; }
+  .hero__bg-overlay {
+    background: linear-gradient(180deg, rgba(6,15,8,0.75) 0%, rgba(6,15,8,0.55) 100%);
+  }
 }

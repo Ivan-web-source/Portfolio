@@ -8,7 +8,11 @@ export default function Hero({ visible }) {
 
   return (
     <section id="hero" className={`hero${visible ? ' hero--visible' : ''}`}>
-      <div className="hero__bg" />
+
+<img src="/assets/hero-bg.jpg" alt="" className="hero__bg-img" />
+
+      {/* Dark gradient overlay — keeps text readable over any photo */}
+      <div className="hero__bg-overlay" />
 
       {/* Animated birds */}
       <Birds />
@@ -58,23 +62,19 @@ export default function Hero({ visible }) {
           </div>
         </div>
 
-        {/* Right — lens circle (mirrors the intro, static, no pulse) */}
+        {/* Right — lens circle */}
         <div className="hero__right">
           <div className="hero__lens">
-            {/* Outer bezel rings */}
             <div className="hero__lens-bezel hero__lens-bezel--outer" />
             <div className="hero__lens-bezel hero__lens-bezel--inner" />
 
-            {/* Photo circle */}
             <div className="hero__lens-photo">
-              <img src="/assets/profile-pic.jpg" alt="Albertus Ivan Wijaya" className="hero__lens-img" />
+              <img src="/assets/profile-pic.jpg" alt="Albertus Ivan Wijaya" className="hero__lens-img"/>
 
-              {/* Subtle inner optical rings */}
               <div className="hero__lens-ring hero__lens-ring--1" />
               <div className="hero__lens-ring hero__lens-ring--2" />
             </div>
 
-            {/* Floating stat chips anchored to the lens */}
             <div className="hero__stat hero__stat--tl">
               <span className="stat-num">6+</span>
               <span className="stat-lbl">Projects</span>

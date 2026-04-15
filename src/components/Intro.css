@@ -1,11 +1,19 @@
 /* ============================================================
-   Intro.css — Camera lens zoom-through entrance animation
-   
-   Animation sequence:
-   enter    → dark bg + circle visible, text appears
-   zoom     → circle scales 1→ 18x, filling screen
-   fadeout  → whole overlay opacity → 0
-   done     → component unmounts
+   Intro.css — Camera lens zoom-through entrance
+
+   BUG FIX: The old version kept transform: scale(18) during
+   the fadeout phase, meaning the giant zoomed circle was still
+   present in the DOM while the overlay faded — causing the
+   zoomed photo to bleed through into the hero frame.
+
+   Fix strategy:
+   - Reduce max zoom from scale(18) → scale(7).
+     This still fills the screen but stays within the photo's
+     rendered resolution so it doesn't pixelate.
+   - During 'fadeout' phase: simultaneously fade the LENS opacity
+     to 0 (separate from the overlay fade) so the circle itself
+     disappears cleanly, not just the container.
+   - The overlay container also fades to opacity 0 as before.
    ============================================================ */
 
 /* ── Overlay container ── */
@@ -17,12 +25,16 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Overlay-level opacity transitions per phase */
 .intro-overlay--enter   { opacity: 1; }
 .intro-overlay--zoom    { opacity: 1; }
-.intro-overlay--fadeout { opacity: 0; }
+/* Fade the whole overlay out over 1.1s */
+.intro-overlay--fadeout {
+  opacity: 0;
+  transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
 /* ── Dark background ── */
 .intro-dark {
@@ -36,28 +48,51 @@
 .intro-lens {
   position: absolute;
   z-index: 3;
-  /* Starting size: large portrait circle */
   width: 420px;
   height: 420px;
   border-radius: 50%;
   overflow: hidden;
-  will-change: transform;
-  /* The zoom transition: scale up from 1 to ~18 over 1.5s */
-  transform: scale(1);
-  transition: transform 1.6s cubic-bezier(0.76, 0, 0.24, 1);
-  /* Outer ring shadow to look like a camera lens bezel */
+  will-change: transform, opacity;
   box-shadow:
     0 0 0 14px #1a1a1a,
     0 0 0 18px #2a2a2a,
     0 0 0 22px #111,
     0 0 60px rgba(0,0,0,0.8),
     0 0 120px rgba(0,0,0,0.4);
+  /* Default state */
+  transform: scale(1);
+  opacity: 1;
 }
 
-.intro-lens--zoom,
-.intro-lens--fadeout {
-  transform: scale(18);
+/* enter phase — lens sits at normal size, no transition needed */
+.intro-lens--enter {
+  transform: scale(1);
+  opacity: 1;
+  transition: none;
+}
+
+/* zoom phase — lens scales up smoothly.
+   scale(7) fills the viewport without pushing into blurry territory.
+   The easing starts slow and accelerates (cinematic zoom feel). */
+.intro-lens--zoom {
+  transform: scale(5);
+  opacity: 1;
   box-shadow: none;
+  transition:
+    transform 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95),
+    box-shadow 0.3s ease;
+}
+
+/* fadeout phase — lens fades out AT its zoomed size.
+   The opacity transition is slightly faster than the overlay fade
+   so the circle disappears before the overlay is fully gone,
+   preventing any bleed-through onto the hero frame. */
+.intro-lens--fadeout {
+  transform: scale(5);
+  opacity: 0;
+  box-shadow: none;
+  transition:
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Inner content of the lens */
@@ -69,14 +104,16 @@
   background: linear-gradient(145deg, #142018, #0e1a12);
 }
 
-/* Profile photo — swap placeholder with <img> */
+/* Profile photo inside the lens */
 .intro-lens__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  display: block;
 }
 
+/* Placeholder (shown when no photo is set) */
 .intro-lens__placeholder {
   width: 100%;
   height: 100%;
@@ -90,22 +127,19 @@
   letter-spacing: 0.1em;
 }
 
-/* Lens optical rings — overlay on top of photo */
+/* Inner optical reflection rings */
 .intro-lens__ring {
   position: absolute;
-  inset: 0;
   border-radius: 50%;
   pointer-events: none;
 }
-
 .intro-lens__ring--1 {
-  border: 1.5px solid rgba(111, 202, 150, 0.12);
   inset: 8px;
+  border: 1.5px solid rgba(111, 202, 150, 0.12);
 }
-
 .intro-lens__ring--2 {
-  border: 1px solid rgba(111, 202, 150, 0.06);
   inset: 20px;
+  border: 1px solid rgba(111, 202, 150, 0.06);
 }
 
 /* Outer bevel ring */
@@ -124,11 +158,13 @@
   inset: 0;
   z-index: 5;
   pointer-events: none;
-  transition: opacity 0.6s ease;
 }
 
-.intro-text--enter  { opacity: 0; animation: introTextFadeIn 0.7s ease 0.3s forwards; }
-.intro-text--zoom   { opacity: 0; transition: opacity 0.3s ease; }
+.intro-text--enter {
+  opacity: 0;
+  animation: introTextFadeIn 0.7s ease 0.35s forwards;
+}
+.intro-text--zoom    { opacity: 0; transition: opacity 0.25s ease; }
 .intro-text--fadeout { opacity: 0; }
 
 @keyframes introTextFadeIn {
@@ -141,7 +177,6 @@
   top: clamp(60px, 10vh, 120px);
   left: clamp(48px, 7vw, 120px);
 }
-
 .intro-text__br {
   position: absolute;
   bottom: clamp(60px, 10vh, 120px);
@@ -159,7 +194,6 @@
   margin-bottom: 10px;
   opacity: 0.8;
 }
-
 .intro-name {
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5vw, 4.2rem);
@@ -168,11 +202,7 @@
   letter-spacing: -0.02em;
   font-weight: 400;
 }
-
-.intro-name em {
-  font-style: italic;
-  color: var(--green-300);
-}
+.intro-name em { font-style: italic; color: var(--green-300); }
 
 .intro-tagline {
   font-size: 0.95rem;
@@ -181,7 +211,6 @@
   letter-spacing: 0.04em;
   margin-bottom: 4px;
 }
-
 .intro-tagline--sub {
   font-size: 0.8rem;
   color: var(--green-300);
@@ -201,11 +230,9 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  transition: opacity 0.4s ease;
 }
-
 .intro-scroll-hint--enter  { opacity: 0; animation: introTextFadeIn 0.6s ease 0.8s forwards; }
-.intro-scroll-hint--zoom   { opacity: 0; }
+.intro-scroll-hint--zoom   { opacity: 0; transition: opacity 0.2s ease; }
 .intro-scroll-hint--fadeout { opacity: 0; }
 
 .intro-scroll-hint span {
@@ -214,28 +241,21 @@
   text-transform: uppercase;
   color: rgba(255,255,255,0.4);
 }
-
 .intro-scroll-line {
   width: 1px;
   height: 40px;
   background: linear-gradient(to bottom, rgba(111,202,150,0.5), transparent);
   animation: introPulse 1.8s ease-in-out infinite;
 }
-
 @keyframes introPulse {
-  0%, 100% { opacity: 0.5; transform: scaleY(1); }
-  50%       { opacity: 1;   transform: scaleY(1.15); }
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
 }
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
-  .intro-lens {
-    width: 280px;
-    height: 280px;
-  }
+  .intro-lens { width: 280px; height: 280px; }
   .intro-lens--zoom,
-  .intro-lens--fadeout {
-    transform: scale(14);
-  }
+  .intro-lens--fadeout { transform: scale(5); }
   .intro-name { font-size: 2rem; }
 }

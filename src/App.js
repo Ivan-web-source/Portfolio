@@ -1,27 +1,21 @@
 // src/App.js
-import React, { useState } from 'react';
-import IntroOverlay from './components/Intro';
+import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Experience from './components/Experience';
+import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 
 export default function App() {
-  const [introDone, setIntroDone] = useState(false);
-
   return (
     <>
-      {/* Intro overlay — sits above everything, unmounts when done */}
-      <IntroOverlay onComplete={() => setIntroDone(true)} />
-
-      {/* Main site — navbar hides on hero, shows after scroll */}
       <Navbar />
-
       <main>
-        {/* Hero receives `visible` to trigger its fade-in after intro */}
-        <Hero visible={introDone} />
+        {/* Hero is always visible — no intro overlay */}
+        <Hero visible={true} />
         <Experience />
+        <Skills />
         <Projects />
         <Contact />
       </main>
