@@ -9,16 +9,16 @@ export default function Hero({ visible }) {
   return (
     <section id="hero" className={`hero${visible ? ' hero--visible' : ''}`}>
 
-<img src="/assets/hero-bg.jpg" alt="" className="hero__bg-img" />
+      {/* ── Background photo ── */}
+      <img src="/assets/hero-bg.jpg" alt="" className="hero__bg-img" />
 
-      {/* Dark gradient overlay — keeps text readable over any photo */}
+      {/* Overlay keeps text legible over the photo */}
       <div className="hero__bg-overlay" />
 
       {/* Animated birds */}
       <Birds />
 
       <div className="hero__content">
-        {/* Left — text */}
         <div className="hero__left">
           <span className="hero__eyebrow">Hello, I'm</span>
           <h1 className="hero__name">
@@ -40,41 +40,31 @@ export default function Hero({ visible }) {
             <a href="mailto:wialbertusivan@gmail.com" className="btn btn--primary">
               Get in Touch
             </a>
-            <a
-              href="https://github.com/Ivan-web-source"
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn--ghost"
-            >
+            <a href="https://github.com/Ivan-web-source" target="_blank" rel="noreferrer" className="btn btn--ghost">
               GitHub ↗
             </a>
           </div>
 
           <div className="hero__socials">
-            <a href="https://www.linkedin.com/in/albertus-ivan-wijaya-7b2219274/"
-               target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/albertus-ivan-wijaya-7b2219274/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
               <LinkedInIcon />
             </a>
-            <a href="https://github.com/Ivan-web-source"
-               target="_blank" rel="noreferrer" aria-label="GitHub">
+            <a href="https://github.com/Ivan-web-source" target="_blank" rel="noreferrer" aria-label="GitHub">
               <GitHubIcon />
             </a>
           </div>
         </div>
 
-        {/* Right — lens circle */}
         <div className="hero__right">
           <div className="hero__lens">
             <div className="hero__lens-bezel hero__lens-bezel--outer" />
             <div className="hero__lens-bezel hero__lens-bezel--inner" />
-
             <div className="hero__lens-photo">
-              <img src="/assets/profile-pic.jpg" alt="Albertus Ivan Wijaya" className="hero__lens-img"/>
-
+            <img src="/assets/profile-pic.jpg" alt="Albertus Ivan Wijaya" className="hero__lens-img" />
+              <div className="hero__lens-placeholder">AIW</div>
               <div className="hero__lens-ring hero__lens-ring--1" />
               <div className="hero__lens-ring hero__lens-ring--2" />
             </div>
-
             <div className="hero__stat hero__stat--tl">
               <span className="stat-num">6+</span>
               <span className="stat-lbl">Projects</span>
@@ -95,7 +85,6 @@ export default function Hero({ visible }) {
   );
 }
 
-/* ── Birds ── */
 function Birds() {
   return (
     <div className="birds" aria-hidden="true">
@@ -108,12 +97,12 @@ function Birds() {
 function BirdSVG() {
   return (
     <svg className="bird-svg" viewBox="0 0 64 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <ellipse cx="32" cy="13" rx="5" ry="2.8" fill="rgba(111,202,150,0.55)" />
-      <path className="bird-wing bird-wing--left"  d="M27 13 Q18 4 8 9 Q16 13 27 13Z"  fill="rgba(111,202,150,0.45)" />
-      <path className="bird-wing bird-wing--right" d="M37 13 Q46 4 56 9 Q48 13 37 13Z" fill="rgba(111,202,150,0.45)" />
-      <path d="M36 14.5 Q40 17 38 20 Q34 16 36 14.5Z" fill="rgba(111,202,150,0.3)" />
-      <circle cx="27.5" cy="11.5" r="2.2" fill="rgba(111,202,150,0.6)" />
-      <path d="M25.5 11 L22 10.5 L25.2 12Z" fill="rgba(111,202,150,0.7)" />
+      <ellipse cx="32" cy="13" rx="5" ry="2.8" fill="rgba(181,169,78,0.55)" />
+      <path className="bird-wing bird-wing--left"  d="M27 13 Q18 4 8 9 Q16 13 27 13Z"  fill="rgba(181,169,78,0.45)" />
+      <path className="bird-wing bird-wing--right" d="M37 13 Q46 4 56 9 Q48 13 37 13Z" fill="rgba(181,169,78,0.45)" />
+      <path d="M36 14.5 Q40 17 38 20 Q34 16 36 14.5Z" fill="rgba(181,169,78,0.3)" />
+      <circle cx="27.5" cy="11.5" r="2.2" fill="rgba(181,169,78,0.65)" />
+      <path d="M25.5 11 L22 10.5 L25.2 12Z" fill="rgba(181,169,78,0.75)" />
     </svg>
   );
 }

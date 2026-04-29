@@ -3,58 +3,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { SKILLS } from '../data/projects';
 import './Skills.css';
 
-/**
- * Skills section — clean scannable grid of skill pills.
- * Three categories: Languages, Frameworks & Libraries, Tools.
- * Each pill has a subtle level indicator so it reads at a glance.
- */
-
-// Proficiency levels per skill (1–5 dots)
-const LEVELS = {
-  // Languages
-  'Java':         4,
-  'Python':       5,
-  'JavaScript':   4,
-  'TypeScript':   3,
-  'C/C++':        3,
-  'R':            4,
-  'Kotlin':       3,
-  'SQL':          4,
-  // Frameworks
-  'React':        4,
-  'React Native': 4,
-  'FastAPI':      4,
-  'Node.js':      3,
-  'Selenium':     3,
-  'Docker':       3,
-  // Tools
-  'Git/GitHub':   5,
-  'AWS EC2':      3,
-  'Oracle DB':    3,
-  'Android Studio': 3,
-  'JupyterHub':   3,
-  'Ollama':       3,
-};
-
 const CATEGORIES = [
-  {
-    key: 'languages',
-    label: 'Languages',
-    icon: <CodeIcon />,
-    items: SKILLS.languages,
-  },
-  {
-    key: 'frameworks',
-    label: 'Frameworks & Libraries',
-    icon: <LayersIcon />,
-    items: SKILLS.frameworks,
-  },
-  {
-    key: 'tools',
-    label: 'Tools & Platforms',
-    icon: <WrenchIcon />,
-    items: SKILLS.tools,
-  },
+  { key: 'languages',  label: 'Languages',              icon: <CodeIcon />,   items: SKILLS.languages  },
+  { key: 'frameworks', label: 'Frameworks & Libraries',  icon: <LayersIcon />, items: SKILLS.frameworks },
+  { key: 'tools',      label: 'Tools & Platforms',       icon: <WrenchIcon />, items: SKILLS.tools      },
 ];
 
 export default function Skills() {
@@ -91,13 +43,13 @@ export default function Skills() {
               </div>
               <div className="skill-cat__pills">
                 {cat.items.map((skill, si) => (
-                  <SkillPill
+                  <div
                     key={skill}
-                    name={skill}
-                    level={LEVELS[skill] || 3}
-                    visible={visible}
-                    delay={ci * 0.1 + si * 0.04}
-                  />
+                    className={`skill-pill${visible ? ' skill-pill--visible' : ''}`}
+                    style={{ transitionDelay: `${ci * 0.1 + si * 0.04}s` }}
+                  >
+                    <span className="skill-pill__name">{skill}</span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -108,31 +60,10 @@ export default function Skills() {
   );
 }
 
-function SkillPill({ name, level, visible, delay }) {
-  return (
-    <div
-      className={`skill-pill${visible ? ' skill-pill--visible' : ''}`}
-      style={{ transitionDelay: `${delay}s` }}
-    >
-      <span className="skill-pill__name">{name}</span>
-      <span className="skill-pill__dots" aria-label={`Level ${level} of 5`}>
-        {[1,2,3,4,5].map(d => (
-          <span
-            key={d}
-            className={`skill-pill__dot${d <= level ? ' skill-pill__dot--on' : ''}`}
-          />
-        ))}
-      </span>
-    </div>
-  );
-}
-
-/* ── Icons ── */
 function CodeIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="16 18 22 12 16 6"/>
-      <polyline points="8 6 2 12 8 18"/>
+      <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
     </svg>
   );
 }
