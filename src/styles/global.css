@@ -1,65 +1,80 @@
-/* ============================================
+/* ============================================================
    GLOBAL STYLES — Ivan Portfolio
-   Theme: Deep forest green hero → Clean white sections
-   Fonts: DM Serif Display + DM Sans
-   ============================================ */
+   Palette derived from hero-bg.jpg (NZ rainforest):
+   Deep olive-blacks, moss greens, warm cream, muted sage.
+   ============================================================ */
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Core palette */
-  --green-50:  #f0faf4;
-  --green-100: #d9f2e3;
-  --green-200: #b3e5c8;
-  --green-300: #6fca96;
-  --green-400: #3db370;
-  --green-500: #22915a;
-  --green-600: #1a7247;
-  --green-700: #145538;
+  /* Forest darks */
+  --forest-950: #080904;
+  --forest-900: #111105;
+  --forest-800: #1c1b08;
+  --forest-700: #2a270c;
 
-  --white:     #ffffff;
-  --off-white: #f7faf8;
-  --gray-50:   #f4f6f4;
-  --gray-100:  #e8ece8;
-  --gray-200:  #cdd4cd;
-  --gray-400:  #8a9a8a;
-  --gray-600:  #4a5a4a;
-  --gray-800:  #1e2a1e;
-  --black:     #0e1a0e;
+  /* Moss / warm olive accents */
+  --moss-500:   #4a4317;
+  --moss-400:   #615a21;
+  --moss-300:   #877e3b;
+  --moss-200:   #b5a94e;
+  --moss-100:   #d4cc8a;
+  --moss-50:    #f0ead6;
+
+  /* Sage greens — UI interactions */
+  --sage-600:   #2d4a2a;
+  --sage-500:   #3d6438;
+  --sage-400:   #527a4c;
+  --sage-300:   #7aab73;
+  --sage-200:   #a8cca3;
+  --sage-100:   #d4e8d1;
+  --sage-50:    #f0f7ef;
+
+  /* Neutrals with olive tint */
+  --white:      #faf9f4;
+  --off-white:  #f3f1e8;
+  --gray-50:    #eceadf;
+  --gray-100:   #d8d5c4;
+  --gray-200:   #b8b49e;
+  --gray-400:   #7a7660;
+  --gray-600:   #4a4738;
+  --gray-700:   #302e22;
+  --gray-800:   #221f14;
+
+  /* Map green vars to sage for component compatibility */
+  --green-50:   #f0f7ef;
+  --green-100:  #d4e8d1;
+  --green-200:  #a8cca3;
+  --green-300:  #7aab73;
+  --green-400:  #527a4c;
+  --green-500:  #3d6438;
+  --green-600:  #2d4a2a;
 
   /* Typography */
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-body:    'DM Sans', system-ui, sans-serif;
 
-  /* Spacing */
+  /* Layout */
   --section-pad: clamp(80px, 10vw, 140px);
   --container:   min(1200px, 92vw);
 
   /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(34, 145, 90, 0.08);
-  --shadow-md:  0 4px 20px rgba(34, 145, 90, 0.12);
-  --shadow-lg:  0 12px 48px rgba(34, 145, 90, 0.16);
+  --shadow-sm:  0 1px 3px rgba(8,9,4,0.14);
+  --shadow-md:  0 4px 20px rgba(8,9,4,0.18);
+  --shadow-lg:  0 12px 48px rgba(8,9,4,0.24);
 
-  --radius-sm:  8px;
-  --radius-md:  16px;
-  --radius-lg:  28px;
-
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html {
-  scroll-behavior: smooth;
-  font-size: 16px;
-}
+html { scroll-behavior: smooth; font-size: 16px; }
 
 body {
   font-family: var(--font-body);
   color: var(--gray-800);
-  background: var(--black);  /* matches intro bg so no flash */
+  background: var(--forest-950);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -74,25 +89,33 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 button { cursor: pointer; border: none; background: none; font-family: var(--font-body); }
 
-/* Shared section typography */
+/* ── Shared animated section label / title ── */
 .section-label {
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--green-500);
+  color: var(--sage-400);
   margin-bottom: 12px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
+.section-label.visible { opacity: 1; transform: translateY(0); }
 
 .section-title {
   font-size: clamp(2rem, 4vw, 3rem);
   color: var(--gray-800);
   margin-bottom: 56px;
   letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease 0.08s, transform 0.5s ease 0.08s;
 }
-.section-title em { font-style: italic; color: var(--green-500); }
+.section-title.visible { opacity: 1; transform: translateY(0); }
+.section-title em { font-style: italic; color: var(--sage-500); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--green-50); }
-::-webkit-scrollbar-thumb { background: var(--green-300); border-radius: 3px; }
+::-webkit-scrollbar-track { background: var(--forest-900); }
+::-webkit-scrollbar-thumb { background: var(--moss-400); border-radius: 3px; }
