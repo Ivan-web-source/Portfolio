@@ -10,7 +10,7 @@ export default function Hero({ visible }) {
     <section id="hero" className={`hero${visible ? ' hero--visible' : ''}`}>
 
       {/* ── Background photo ── */}
-      <img src="/assets/hero-bg.jpg" alt="" className="hero__bg-img" />
+      <img src="/assets/hero-bg.jpg" alt="Albertus Ivan Wijaya" className="hero__bg-img" />
 
       {/* Overlay keeps text legible over the photo */}
       <div className="hero__bg-overlay" />

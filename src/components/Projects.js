@@ -6,7 +6,19 @@ import './Projects.css';
 export default function Projects() {
   const [current, setCurrent]       = useState(0);
   const [videoModal, setVideoModal] = useState(null);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const headerRef = useRef(null);
   const total = PROJECTS.length;
+
+  // Make the section-label / section-title animate in on scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setHeaderVisible(true); },
+      { threshold: 0.15 }
+    );
+    if (headerRef.current) observer.observe(headerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const dragStartX = useRef(null);
   const dragDelta  = useRef(0);
@@ -57,9 +69,9 @@ export default function Projects() {
 
   return (
     <section id="projects" className="projects">
-      <div className="projects__header">
-        <div className="section-label">Work</div>
-        <h2 className="section-title">Featured Projects</h2>
+      <div className="projects__header" ref={headerRef}>
+        <div className={`section-label${headerVisible ? ' visible' : ''}`}>Work</div>
+        <h2 className={`section-title${headerVisible ? ' visible' : ''}`}>Featured <em>Projects</em></h2>
       </div>
 
       <div
