@@ -5,6 +5,10 @@ import './Hero.css';
 export default function Hero({ visible }) {
   const scrollDown = () =>
     document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToContact = (event) => {
+    event.preventDefault();
+    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <section id="hero" className={`hero${visible ? ' hero--visible' : ''}`}>
@@ -22,7 +26,7 @@ export default function Hero({ visible }) {
         <div className="hero__left">
           <span className="hero__eyebrow">Hello, I'm</span>
           <h1 className="hero__name">
-            Albertus<br /><em>Ivan Wijaya</em>
+            Albertus<br />Ivan <em>Wijaya</em>
           </h1>
           <p className="hero__tagline">
             Software Developer &amp; CS + Statistics student at UBC.
@@ -37,7 +41,7 @@ export default function Hero({ visible }) {
           </div>
 
           <div className="hero__actions">
-            <a href="mailto:wialbertusivan@gmail.com" className="btn btn--primary">
+            <a href="#contact" className="btn btn--primary" onClick={scrollToContact}>
               Get in Touch
             </a>
             <a href="https://github.com/Ivan-web-source" target="_blank" rel="noreferrer" className="btn btn--ghost">

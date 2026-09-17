@@ -118,7 +118,7 @@ export default function Navbar() {
           </nav>
 
           <div className="mobile-drawer__footer">
-            <a href="mailto:wialbertusivan@gmail.com" className="mobile-drawer__cta">
+            <a href="#contact" className="mobile-drawer__cta" onClick={(e) => handleLink(e, '#contact')}>
               Get in Touch
             </a>
           </div>
