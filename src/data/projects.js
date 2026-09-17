@@ -89,6 +89,28 @@ export const PROJECTS = [
 
 export const EXPERIENCE = [
   {
+    role: "AI Agent Software Engineer Intern",
+    org: "Sendbird",
+    location: "Vancouver, BC",
+    period: "September 2026 - Present",
+    bullets: [
+      "Design and iterate on system prompts, dialogue flows, and tool-use instructions for a production LLM agent, running experiments across Claude, GPT, and other models to guide product decisions.",
+      "Integrate customer API endpoints for order lookup, cancellations, and account actions as agent tools, translating customer requirements into agent logic and edge-case handling across business domains.",
+      "Build evaluations to measure whether prompt changes improve agent behavior, and extend internal tooling for prompt versioning, evaluation runs, experiment tracking, and CI/CD for agent deployments.",
+    ],
+  },
+  {
+    role: "Software Engineer Intern",
+    org: "UBC Chemistry",
+    location: "Vancouver, BC",
+    period: "May 2026 - August 2026",
+    bullets: [
+      "Developed an internal Retrieval-Augmented Generation chatbot using LangChain and Qwen, creating secure source retrieval and a privacy-safe model for 11 course modules.",
+      "Engineered a Canvas LMS-integrated authentication pipeline using LTI 1.3, enabling single sign-on for 1000+ students and chatbot access via the Canvas API.",
+      "Deployed automated tutoring services for exam generation, knowledge assessment, and AI-assisted marking with structured rubric-based feedback tailored to the course level.",
+    ],
+  },
+  {
     role: "Undergraduate Teaching Assistant",
     org: "University of British Columbia",
     location: "Vancouver, BC",
