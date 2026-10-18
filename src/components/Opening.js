@@ -86,24 +86,33 @@ export default function Opening() {
         },
       });
 
-      // 1 → 2: pull back. One transform on one object, so screen and body stay welded.
-      // Starts from rest: the full-screen first frame is the reference point and
-      // the first ticks only nudge away from it, then the pull-back builds up
-      tl.fromTo(rig, { scale: 1, y: 0 }, { scale: s1, y: y1, duration: 1, ease: 'sine.inOut' }, 0);
+      // One continuous camera move, built from overlapping layers so there is
+      // never a moment where everything has stopped:
+      //   rig     pull-back from the full-screen first frame (starts from rest)
+      //   machine a second, gentler shrink-and-lift that begins while the
+      //           pull-back is still settling and carries through the fold
+      //   body    tips towards the viewer, lid folds, screen dims, all
+      //           overlapping the tail of the pull-back
+      // Rig and machine scale different elements about the same point (the
+      // screen's centre), so their effects multiply instead of fighting.
+      const machine = rig.querySelector('.laptop');
+      gsap.set(machine, { transformOrigin: `${b + sw / 2}px ${b + sh / 2}px` });
+
+      tl.fromTo(rig, { scale: 1, y: 0 }, { scale: s1, y: y1, duration: 1.45, ease: 'sine.inOut' }, 0);
       // The wall is fully painted from page load (it sits behind the full-screen
       // laptop), so the first scroll never waits on painting thirty pictures
-      tl.fromTo('.opening__wall', { scale: 1.35 }, { scale: 1, duration: 1, ease: 'sine.inOut' }, 0);
+      tl.fromTo('.opening__wall', { scale: 1.35 }, { scale: 1, duration: 1.45, ease: 'sine.inOut' }, 0);
       // There is one nav in this scene: the one on the screen, which simply
       // shrinks with it. The fixed site nav stays hidden until the very end.
       const siteNav = document.querySelector('.nav');
 
-      // A moment to look at it, while the wall keeps drifting on its own.
-      // 2 → 3: tip towards the viewer, close the lid
-      tl.to(bodyRef.current, { rotateX: -16, duration: 1, ease: 'power2.inOut' }, 1.3);
-      tl.to(lidRef.current, { rotateX: -89, duration: 1.05, ease: 'power2.in' }, 1.35);
-      tl.to(dimRef.current, { opacity: 0.9, duration: 0.9, ease: 'power1.in' }, 1.4);
-      // The folded lid lies towards the viewer, so lift the machine to keep it centred
-      tl.to(rig, { scale: s1 * 0.8, y: y1 - vh * 0.26, duration: 1.1, ease: 'power2.inOut' }, 1.3);
+      // The folded lid lies towards the viewer, so lift the machine as it
+      // closes to keep it centred (y is inside the rig's scale, hence / s1)
+      tl.fromTo(machine, { scale: 1, y: 0 },
+        { scale: 0.8, y: -(vh * 0.26) / s1, duration: 1.55, ease: 'sine.inOut' }, 0.6);
+      tl.to(bodyRef.current, { rotateX: -16, duration: 1.2, ease: 'sine.inOut' }, 0.65);
+      tl.to(lidRef.current, { rotateX: -89, duration: 1.45, ease: 'sine.inOut' }, 0.75);
+      tl.to(dimRef.current, { opacity: 0.9, duration: 1.3, ease: 'sine.inOut' }, 0.85);
 
       // Hold the closed laptop while the Work section rises over it; the site
       // nav comes back as the section lands
