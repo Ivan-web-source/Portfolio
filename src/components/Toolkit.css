@@ -1,0 +1,85 @@
+/* src/components/Toolkit.css */
+
+.toolkit {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(40px, 5vw, 72px);
+  padding: 96px 0;
+  overflow: hidden;
+}
+
+.toolkit__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 32px;
+  padding: 0 var(--gutter);
+}
+.toolkit__lede {
+  max-width: 38ch;
+  justify-self: end;
+  font-size: var(--step-lead);
+  line-height: 1.35;
+  color: var(--mist);
+}
+
+.toolkit__viewport { padding: 0 var(--gutter); }
+
+.toolkit__track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
+}
+
+.toolkit__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: clamp(280px, 28vw, 420px);
+  min-height: clamp(340px, 30vw, 440px);
+  padding: 32px;
+  background: var(--navy-2);
+  border-radius: 28px;
+  transition: background-color 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+.toolkit__card.is-active { background: var(--cobalt); transform: translateY(-12px); }
+
+.toolkit__card-title {
+  font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.toolkit__card ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+}
+.toolkit__card li {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--navy);
+  font-size: var(--step-small);
+  transition: background-color 0.5s;
+}
+.toolkit__card.is-active li { background: var(--cobalt-deep); }
+
+@media (max-width: 860px) {
+  .toolkit { min-height: 0; padding: var(--section-space) 0; }
+  .toolkit__intro { grid-template-columns: 1fr; }
+  .toolkit__lede { justify-self: start; }
+  .toolkit__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    scrollbar-width: none;
+  }
+  .toolkit__card { scroll-snap-align: start; width: 78vw; min-height: 320px; }
+  .toolkit__card.is-active { transform: none; }
+}
