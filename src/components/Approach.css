@@ -1,0 +1,53 @@
+/* src/components/Approach.css */
+
+.approach {
+  padding: var(--section-space) var(--gutter);
+  text-align: center;
+}
+
+.approach__title { max-width: 16ch; margin: 0 auto; }
+
+.approach__lede {
+  max-width: 40ch;
+  margin: 24px auto 0;
+  font-size: var(--step-lead);
+  line-height: 1.35;
+  color: var(--mist);
+}
+
+.approach__cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  margin-top: clamp(64px, 8vw, 120px);
+  text-align: left;
+}
+
+.approach__col-title {
+  font-size: var(--step-lead);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+.approach__col p { color: var(--mist); max-width: 36ch; }
+
+/* A thick bar, not a rule: navy track, cobalt fill */
+.approach__bar {
+  height: 6px;
+  margin-top: 32px;
+  background: var(--navy-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.approach__bar span {
+  display: block;
+  height: 100%;
+  background: var(--cobalt);
+  transform-origin: left center;
+}
+
+@media (max-width: 860px) {
+  .approach { text-align: left; }
+  .approach__title, .approach__lede { margin-left: 0; }
+  .approach__cols { grid-template-columns: 1fr; gap: 48px; }
+}

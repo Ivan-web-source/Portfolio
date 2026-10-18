@@ -1,23 +1,29 @@
 // src/App.js
 import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
+import Nav from './components/Nav';
+import Opening from './components/Opening';
+import Work from './components/Work';
+import Approach from './components/Approach';
 import Experience from './components/Experience';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
+import Toolkit from './components/Toolkit';
+import Faq from './components/Faq';
+import Closing from './components/Closing';
+import { useSmoothScroll } from './lib/motion';
 
 export default function App() {
+  useSmoothScroll();
+
   return (
     <>
-      <Navbar />
+      <Nav />
       <main>
-        {/* Hero is always visible — no intro overlay */}
-        <Hero visible={true} />
+        <Opening />
+        <Work />
+        <Approach />
         <Experience />
-        <Skills />
-        <Projects />
-        <Contact />
+        <Toolkit />
+        <Faq />
+        <Closing />
       </main>
     </>
   );

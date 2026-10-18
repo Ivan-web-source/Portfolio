@@ -1,0 +1,83 @@
+/* src/components/Faq.css */
+
+.faq {
+  padding: var(--section-space) var(--gutter);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.faq__title { text-align: center; margin-bottom: clamp(48px, 6vw, 88px); }
+
+.faq__item {
+  background: var(--navy);
+  border-radius: 20px;
+  transition: background-color 0.3s;
+}
+.faq__item + .faq__item { margin-top: 10px; }
+.faq__item.is-open { background: var(--navy-2); }
+
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  padding: 24px 28px;
+  background: none;
+  border: 0;
+  text-align: left;
+  font-size: var(--step-lead);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.faq__icon {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--navy-2);
+  transition: background-color 0.3s, transform 0.4s var(--ease-out);
+}
+.faq__icon::before,
+.faq__icon::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 14px; height: 2.5px;
+  background: var(--ice);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s var(--ease-out);
+}
+.faq__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faq__q:hover .faq__icon { background: var(--cobalt); }
+.faq__item.is-open .faq__icon { background: var(--cobalt); transform: rotate(180deg); }
+.faq__item.is-open .faq__icon::after { transform: translate(-50%, -50%) rotate(0deg); }
+
+/* Height animates through a grid row, so no measuring is needed */
+.faq__a {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+.faq__item.is-open .faq__a { grid-template-rows: 1fr; }
+.faq__a > div { overflow: hidden; }
+.faq__a p {
+  max-width: 64ch;
+  padding: 0 28px 28px;
+  color: var(--mist);
+  opacity: 0;
+  filter: blur(6px);
+  transition: opacity 0.4s, filter 0.4s;
+}
+.faq__item.is-open .faq__a p { opacity: 1; filter: none; transition-delay: 0.1s; }
+
+@media (max-width: 860px) {
+  .faq__title { text-align: left; }
+  .faq__q { padding: 20px; font-size: var(--step-body); }
+  .faq__a p { padding: 0 20px 22px; }
+}

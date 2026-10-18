@@ -1,0 +1,197 @@
+/* src/components/Laptop.css
+   Space-black laptop. Materials use soft metal shading (the only gradients on
+   the page): a laptop drawn in flat fills reads as a toy next to photographs. */
+
+.laptop {
+  --sw: 1280px;                         /* screen width  (set from JS) */
+  --sh: 800px;                          /* screen height (set from JS) */
+  --b: calc(var(--sw) * 0.014);         /* bezel */
+  --chin: calc(var(--sw) * 0.02);       /* bezel under the screen */
+  --lid-w: calc(var(--sw) + var(--b) * 2);
+  --lid-h: calc(var(--sh) + var(--b) + var(--chin));
+  --depth: calc(var(--lid-h) * 0.98);   /* keyboard deck: as deep as the lid, so it closes flush */
+  --t: calc(var(--sw) * 0.017);         /* base thickness */
+  --r: calc(var(--sw) * 0.02);          /* lid corner radius */
+
+  --alu: #2b2e35;
+  --alu-hi: #3c4049;
+  --alu-lo: #1c1e23;
+
+  position: relative;
+  width: var(--lid-w);
+  height: var(--lid-h);
+}
+
+.laptop__scene {
+  position: absolute;
+  inset: 0;
+  perspective: calc(var(--sw) * 3.4);
+  perspective-origin: 50% 45%;
+}
+
+.laptop__body {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;           /* the hinge */
+}
+
+/* ── Lid ── */
+.laptop__lid {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%;
+}
+
+.laptop__front,
+.laptop__back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r) var(--r) calc(var(--r) * 0.35) calc(var(--r) * 0.35);
+  backface-visibility: hidden;
+}
+
+.laptop__front {
+  padding: var(--b) var(--b) var(--chin);
+  background: #060709;
+  /* the thin aluminium rim around the glass */
+  box-shadow: /* taste-skill-ignore: device material */
+    inset 0 0 0 calc(var(--sw) * 0.0016) var(--alu-hi),
+    inset 0 0 0 calc(var(--sw) * 0.0034) #0b0c0f;
+}
+
+.laptop__camera {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--b) * 0.5);
+  width: calc(var(--sw) * 0.0042);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #1b2030;
+  box-shadow: inset 0 0 0 calc(var(--sw) * 0.001) #2a3145; /* taste-skill-ignore: device material */
+  transform: translate(-50%, -50%);
+}
+
+.laptop__screen {
+  position: relative;
+  width: var(--sw);
+  height: var(--sh);
+  overflow: hidden;
+  border-radius: calc(var(--r) * 0.45) calc(var(--r) * 0.45) 0 0;
+  background: #000;
+}
+
+/* A faint sheen across the glass, the way a real screen catches the room */
+.laptop__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgb(255 255 255 / 0.07) 0%, rgb(255 255 255 / 0) 38%); /* taste-skill-ignore: device material */
+}
+
+.laptop__dim {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.laptop__back {
+  background: linear-gradient(180deg, var(--alu-hi), var(--alu) 30%, var(--alu-lo)); /* taste-skill-ignore: device material */
+  transform: rotateY(180deg);
+}
+/* The mark on the lid: a small debossed square, no brand */
+.laptop__back::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 48%;
+  width: calc(var(--sw) * 0.05);
+  aspect-ratio: 1;
+  border-radius: 24%;
+  background: var(--alu-lo);
+  box-shadow: inset 0 0 0 calc(var(--sw) * 0.0015) #4a4f5a; /* taste-skill-ignore: device material */
+  transform: translate(-50%, -50%);
+}
+
+/* ── Keyboard deck, hinged at the bottom of the lid ── */
+.laptop__deck {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: var(--depth);
+  padding: calc(var(--depth) * 0.06) calc(var(--sw) * 0.09) 0;
+  border-radius: 0 0 var(--r) var(--r);
+  background: linear-gradient(180deg, var(--alu-lo), var(--alu) 18%, var(--alu-hi)); /* taste-skill-ignore: device material */
+  transform-origin: 50% 0;
+  transform: rotateX(90deg);
+  transform-style: preserve-3d;
+}
+
+.laptop__keys {
+  display: grid;
+  gap: calc(var(--sw) * 0.0035);
+  padding: calc(var(--sw) * 0.006);
+  border-radius: calc(var(--sw) * 0.006);
+  background: #121318;
+}
+.laptop__row { display: flex; gap: calc(var(--sw) * 0.0035); }
+.laptop__row span {
+  flex: 1;
+  height: calc(var(--depth) * 0.058);
+  border-radius: calc(var(--sw) * 0.0025);
+  background: #08090b;
+  box-shadow: inset 0 calc(var(--sw) * -0.0012) 0 #1e2027; /* taste-skill-ignore: device material */
+}
+.laptop__row--space span { flex: 1; }
+.laptop__row--space .is-space { flex: 6; }
+
+.laptop__pad {
+  width: 42%;
+  height: calc(var(--depth) * 0.36);
+  margin: calc(var(--depth) * 0.07) auto 0;
+  border-radius: calc(var(--sw) * 0.008);
+  background: linear-gradient(180deg, #33363e, #2c2f36); /* taste-skill-ignore: device material */
+  box-shadow: inset 0 0 0 calc(var(--sw) * 0.0012) #3f434d; /* taste-skill-ignore: device material */
+}
+
+/* The front edge of the base: hangs down from the deck, facing the viewer */
+.laptop__lip {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: var(--t);
+  border-radius: 0 0 var(--r) var(--r);
+  background: linear-gradient(180deg, #474b55, #23252b 70%, #15161a); /* taste-skill-ignore: device material */
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+}
+.laptop__lip::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 0;
+  width: 13%;
+  height: 45%;
+  border-radius: 0 0 calc(var(--sw) * 0.01) calc(var(--sw) * 0.01);
+  background: #1a1c21;
+  transform: translateX(-50%);
+}
+
+/* ── Contact shadow on whatever the laptop sits in front of ── */ /* taste-skill-ignore: device material */
+.laptop__shadow {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--lid-h) + var(--depth) * 0.06);
+  width: calc(var(--lid-w) * 1.12);
+  height: calc(var(--sh) * 0.14);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  filter: blur(calc(var(--sw) * 0.02));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
