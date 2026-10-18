@@ -112,7 +112,9 @@
   grid-column: 1;
   grid-row: 2;
   align-self: end;
-  font-size: var(--step-giant);
+  /* Large, but kept below the page's giant step so it doesn't crowd the
+     photo or dwarf the nav on wide windows (about 106px at 1440, 128px max) */
+  font-size: clamp(3rem, 1rem + 6.2vw, 8rem);
   font-weight: 500;
   line-height: 0.92;
   letter-spacing: -0.045em;
