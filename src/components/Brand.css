@@ -1,0 +1,63 @@
+/* src/components/Brand.css */
+
+/* Two weights in one word, the way the reference sets its name */
+.wordmark {
+  display: inline-flex;
+  font-size: clamp(1rem, 0.9rem + 0.35vw, 1.25rem);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  color: var(--ice);
+}
+.wordmark__first { font-weight: 600; }
+.wordmark__last { font-weight: 400; opacity: 0.85; }
+
+.touch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 22px 0 18px;
+  border-radius: 999px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ice);
+  color: var(--night);
+  font-size: var(--step-small);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+}
+
+/* The dark fill grows out of the dot */
+.touch__fill {
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  z-index: -1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--night);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.6s var(--ease-out);
+}
+.touch__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cobalt);
+  transition: transform 0.45s var(--ease-out), background-color 0.45s;
+}
+
+.touch:hover,
+.touch:focus-visible { color: var(--ice); }
+.touch:hover .touch__fill,
+.touch:focus-visible .touch__fill { transform: translate(-50%, -50%) scale(60); }
+.touch:hover .touch__dot,
+.touch:focus-visible .touch__dot { transform: scale(1.4); background: #6f8fff; }
+.touch:active { transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  .touch__fill { transition-duration: 0.01ms; }
+}
