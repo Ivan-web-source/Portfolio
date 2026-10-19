@@ -5,9 +5,10 @@
 //  Every picsum.photos link below is a random stand-in image.
 // ─────────────────────────────────────────────────────────────
 
-// Already printed in the site's blues (baked in, so the opening never runs a live filter).
-// To swap it: replace public/assets/profile-duotone.jpg with your own blue-toned photo.
-export const HERO_PORTRAIT = '/assets/profile-duotone.jpg';
+// The cut-out portrait that stands in front of the hero title. Background
+// removed, upscaled 2x, lightly retouched and graded into the site's blues.
+// To swap it: a transparent WebP/PNG of a person, roughly 1260 x 2000.
+export const HERO_PORTRAIT = '/assets/ivan-cutout.webp';
 
 // Shown in "Selected work". Best at 16:10, about 1600×1000.
 export const PROJECT_SHOTS = {
@@ -23,23 +24,27 @@ export const PROJECT_SHOTS = {
 const thumb = (url) => url.replace('/1600/1000', '/640/400');
 
 // The wall of pictures that drifts behind the laptop in the opening.
-// Mix of shapes on purpose: 'tall' (4:5), 'wide' (16:10) or 'square'.
+// Your own travel photos (public/assets/wall, enhanced), mixed with stand-ins.
+// Each tile takes its photo's own shape so nothing important gets cropped:
+// 'tall' 3:4, 'portrait' 4:5, 'land' 4:3, 'wide' 16:10, 'photo' 3:2, 'square'.
+// Order matters: tile i goes into column i % 5.
+const wall = (name) => `/assets/wall/${name}.webp`;
 export const COLLAGE = [
-  { src: 'https://picsum.photos/seed/ivan-c1/480/600', shape: 'tall' },    // REPLACE
-  { src: 'https://picsum.photos/seed/ivan-c2/640/400', shape: 'wide' },    // REPLACE
-  { src: 'https://picsum.photos/seed/ivan-c3/520/520', shape: 'square' },   // REPLACE
-  { src: 'https://picsum.photos/seed/ivan-c4/480/600', shape: 'tall' },    // REPLACE
-  { src: thumb(PROJECT_SHOTS.finwise), shape: 'wide' },
-  { src: 'https://picsum.photos/seed/ivan-c6/520/520', shape: 'square' },   // REPLACE
-  { src: '/assets/hero-bg-1600.jpg', shape: 'wide' },
-  { src: 'https://picsum.photos/seed/ivan-c8/480/600', shape: 'tall' },    // REPLACE
-  { src: thumb(PROJECT_SHOTS.polar), shape: 'wide' },
-  { src: 'https://picsum.photos/seed/ivan-c10/520/520', shape: 'square' },  // REPLACE
-  { src: 'https://picsum.photos/seed/ivan-c11/480/600', shape: 'tall' },   // REPLACE
-  { src: thumb(PROJECT_SHOTS.insight), shape: 'wide' },
-  { src: 'https://picsum.photos/seed/ivan-c13/480/600', shape: 'tall' },   // REPLACE
-  { src: 'https://picsum.photos/seed/ivan-c14/520/520', shape: 'square' },  // REPLACE
-  { src: thumb(PROJECT_SHOTS.matchmind), shape: 'wide' },
+  { src: wall('aurora'), shape: 'tall' },
+  { src: wall('canyon'), shape: 'tall' },
+  { src: 'https://picsum.photos/seed/ivan-c2/640/400', shape: 'wide' },      // REPLACE
+  { src: wall('chongqing-ivan'), shape: 'tall' },
+  { src: wall('sunset'), shape: 'tall' },
+  { src: 'https://picsum.photos/seed/ivan-c4/480/600', shape: 'portrait' },  // REPLACE
+  { src: wall('whistler-hike'), shape: 'land' },
+  { src: wall('st-peters'), shape: 'tall' },
+  { src: 'https://picsum.photos/seed/ivan-c6/520/520', shape: 'square' },    // REPLACE
+  { src: wall('autumn-pond'), shape: 'photo' },
+  { src: wall('chongqing-bridge'), shape: 'tall' },
+  { src: thumb(PROJECT_SHOTS.finwise), shape: 'wide' },                      // REPLACE with a screenshot
+  { src: 'https://picsum.photos/seed/ivan-c11/480/600', shape: 'portrait' }, // REPLACE
+  { src: 'https://picsum.photos/seed/ivan-c14/520/520', shape: 'square' },   // REPLACE
+  { src: thumb(PROJECT_SHOTS.matchmind), shape: 'wide' },                    // REPLACE with a screenshot
 ];
 
 // Floats beside the cursor in "Experience". Best at 4:3, about 800×600.

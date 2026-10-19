@@ -5,11 +5,11 @@
 //      one object, in front of a wall of pictures that never stops drifting.
 //   3. Scrolling on, the machine tips towards you and the lid closes. The
 //      Work section then rises over the still-pinned scene (see Work.css).
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Laptop from './Laptop';
-import { gsap, ScrollTrigger, isPhone, scrollToHash } from '../lib/motion';
+import { gsap, ScrollTrigger, isPhone, prefersReducedMotion } from '../lib/motion';
 import { HERO_PORTRAIT, COLLAGE } from '../data/media';
-import { NAV_LINKS, openMenu } from './Nav';
+import { Wordmark, TouchPill } from './Brand';
 import './Opening.css';
 
 // The laptop screen always covers the window at full size. Its shape follows
@@ -114,6 +114,11 @@ export default function Opening() {
       tl.to(lidRef.current, { rotateX: -89, duration: 1.45, ease: 'sine.inOut' }, 0.75);
       tl.to(dimRef.current, { opacity: 0.9, duration: 1.3, ease: 'sine.inOut' }, 0.85);
 
+      // Once the lid is shut, the hero's links can't be seen, so take them out
+      // of the tab order (and put them back when scrolling up past the fold)
+      const hero = machine.querySelector('.hero');
+      tl.eventCallback('onUpdate', () => { hero.inert = tl.time() > 2.1; });
+
       // Hold the closed laptop while the Work section rises over it; the site
       // nav comes back as the section lands
       tl.to({}, { duration: PIN_SCREENS - tl.duration() });
@@ -135,11 +140,7 @@ export default function Opening() {
         {/* The wall of pictures behind the laptop. Moves by itself, always. */}
         <div className="opening__wall" aria-hidden="true">
           {columns.map((col, c) => (
-            <div className={`opening__col${c % 2 ? ' is-down' : ''}`} key={c} style={{ '--speed': `${46 + c * 7}s` }}>
-              {[...col, ...col].map((tile, i) => (
-                <img key={i} src={tile.src} alt="" decoding="async" className={`opening__tile is-${tile.shape}`} />
-              ))}
-            </div>
+            <WallColumn key={c} tiles={col} down={c % 2 === 1} seconds={46 + c * 7} />
           ))}
         </div>
 
@@ -154,7 +155,7 @@ export default function Opening() {
             lidRef={lidRef}
             dimRef={dimRef}
           >
-            <Hero pageW={vw} pageH={vh} />
+            <Hero pageW={vw} pageH={vh} sh={sh} />
           </Laptop>
         </div>
 
@@ -163,40 +164,95 @@ export default function Opening() {
   );
 }
 
-// What is on the screen: a whole site's first view, nav included. This nav is
-// live: it is the page's navigation for as long as the opening is pinned.
-function Hero({ pageW, pageH }) {
-  const go = (e, href) => { e.preventDefault(); scrollToHash(href); };
+// One column of the wall. Its photo sequence is repeated enough times to
+// stay taller than the wall at every point of the loop, and the loop moves by
+// exactly one sequence (measured, gaps included), so when it restarts the
+// picture is identical and there is no jump. Neighbouring tiles are always
+// different photos; the sequence itself simply comes round again.
+const REPEATS = 6;
+function WallColumn({ tiles, down, seconds }) {
+  const ref = useRef(null);
+  useLayoutEffect(() => {
+    const col = ref.current;
+    const measure = () => {
+      const first = col.children[0];
+      const nextCopy = col.children[tiles.length];
+      if (first && nextCopy) col.style.setProperty('--cycle', `${nextCopy.offsetTop - first.offsetTop}px`);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);   // tiles change size as images load and on resize
+    Array.from(col.children).slice(0, tiles.length + 1).forEach((el) => ro.observe(el));
+    return () => ro.disconnect();
+  }, [tiles.length]);
+
+  const seq = Array.from({ length: REPEATS }, () => tiles).flat();
   return (
-    <div className="hero">
-      <img className="hero__portrait" src={HERO_PORTRAIT} alt="Ivan in the snow beside a husky" />
-      {/* The copy fills exactly the visible window, centred on the screen. When
-          the screen is wider (phones) or taller (very wide windows) than the
-          window, the extra screen only shows once the camera pulls back, so the
-          first frame is never cropped. */}
+    <div ref={ref} className={`opening__col${down ? ' is-down' : ''}`} style={{ '--speed': `${seconds}s` }}>
+      {seq.map((tile, i) => (
+        <img key={i} src={tile.src} alt="" decoding="async" className={`opening__tile is-${tile.shape}`} />
+      ))}
+    </div>
+  );
+}
+
+// What is on the screen: the site's first view, built like the reference as
+// stacked layers: gradient field, title, the cut-out portrait in front of the
+// title, then the nav and captions on top. The layers drift with the mouse at
+// different strengths (portrait most), and keep doing so after the camera
+// pulls back, since they live inside the screen.
+function Hero({ pageW, pageH, sh }) {
+  const bgRef = useRef(null);
+  const textRef = useRef(null);
+  const personRef = useRef(null);
+
+  useEffect(() => {
+    if (prefersReducedMotion() || !window.matchMedia('(hover: hover)').matches) return undefined;
+    const layer = (el, strength) => ({
+      x: gsap.quickTo(el, 'x', { duration: 1.1, ease: 'power3.out' }),
+      y: gsap.quickTo(el, 'y', { duration: 1.1, ease: 'power3.out' }),
+      strength,
+    });
+    const layers = [layer(bgRef.current, 14), layer(textRef.current, 20), layer(personRef.current, 38)];
+    const onMove = (e) => {
+      // Only while the opening is on screen; the rest of the page stays still
+      if (!document.documentElement.classList.contains('in-opening') && window.scrollY > 10) return;
+      // Like the reference, layers move against the mouse: point up and the
+      // scene sinks a little, as if you were looking over it
+      const nx = 1 - (e.clientX / window.innerWidth) * 2;     // 1 … -1
+      const ny = 1 - (e.clientY / window.innerHeight) * 2;
+      layers.forEach((l) => { l.x(nx * l.strength); l.y(ny * l.strength * 0.6); });
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
+  // The window-sized copy box is centred on the screen; anything past it only
+  // shows once the camera pulls back. The portrait stands on the screen's bottom
+  // edge and reaches near the window's top.
+  const extraY = Math.max(0, (sh - pageH) / 2);
+  return (
+    <div className="hero" style={{ '--page-h': `${pageH}px`, '--extra-y': `${extraY}px` }}>
+      <div className="hero__bg" ref={bgRef} aria-hidden="true" />
       <div className="hero__inner" style={{ width: `min(100%, ${pageW}px)`, height: `min(100%, ${pageH}px)` }}>
+        {/* The text layer (title and captions) drifts as one; the elements
+            inside hold their own positions, so GSAP never touches a
+            transform that CSS uses for layout */}
+        <div className="hero__copy" ref={textRef}>
+          <h1 className="hero__title" aria-label="Building Agents That Talk Back">
+            <span aria-hidden="true">Building</span>
+            <span aria-hidden="true">Agents That</span>
+            <span aria-hidden="true">Talk Back</span>
+          </h1>
+          <p className="hero__tag hero__tag--top">AI Agent Engineer<br />at Sendbird</p>
+          <p className="hero__tag hero__tag--bottom">CS + Statistics<br />UBC, Vancouver</p>
+        </div>
+        <div className="hero__person">
+          <img ref={personRef} src={HERO_PORTRAIT} alt="Albertus Ivan Wijaya" width="1262" height="2009" decoding="async" />
+        </div>
         <header className="hero__nav">
-          <a className="hero__mark" href="#top" onClick={(e) => go(e, '#top')}>Ivan Wijaya</a>
-          <nav className="hero__links" aria-label="Main">
-            {NAV_LINKS.map((l) => (
-              <a key={l.href} href={l.href} onClick={(e) => go(e, l.href)}>{l.label}</a>
-            ))}
-          </nav>
-          <div className="hero__actions">
-            <button type="button" className="pill hero__menu" onClick={openMenu}>Menu</button>
-            <a className="pill hero__pill" href="#contact" onClick={(e) => go(e, '#contact')}>Get in touch</a>
-          </div>
+          <Wordmark />
+          <TouchPill />
         </header>
-        <h1 className="hero__title">Agents that talk,<br />LEDs that spin</h1>
-        <p className="hero__lede">
-          I’m Albertus Ivan Wijaya. I build AI agents at Sendbird and
-          study Computer Science and Statistics at UBC.
-        </p>
-        <ul className="hero__facts">
-          <li>Vancouver, BC</li>
-          <li>Open to co-op</li>
-        </ul>
-        <p className="hero__cue">Scroll</p>
       </div>
     </div>
   );
